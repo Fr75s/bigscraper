@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/python3
 
 # compile.py
 # Compiles scraped data into formats used by other software
