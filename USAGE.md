@@ -1,6 +1,9 @@
 # Usage
 
+## Table of Contents
 
+- [Quickstart](#quickstart)
+- [Help Commands](#help-commands)
 
 ## Quickstart
 
@@ -48,3 +51,24 @@ bigscraper compile gc pegasus
 This command "compiles" the data which we collected into the Pegasus Frontend format (metadata.pegasus.txt). By default, this outputs to the `~/Documents/bigscraper/[system]` folder, where `[system]` is the same as the system abbreviation, or item 3 in the command.
 
 Once this command has run, you can find the metadata.pegasus.txt file and a media folder in the output folder. You can move these to the GameCube games folder, or leave them as is. Now, you have a file you can use in Pegasus Frontend.
+
+## Help Commands
+
+Bigscraper comes with several help commands that details syntax, systems and more. In these commands, "help" can be replaced by "-h", "-?" or "--help" with any capitalization.
+
+To get a list of subcommands, run the following.
+
+```
+bigscraper help
+```
+
+To get help for subcommands, run the following, replacing `[subcommand]` with the proper subcommand.
+
+```
+bigscraper [subcommand] help
+```
+
+Additionally, you can see what systems and export formats are supported. This can be done through running either of the following.
+
+Systems: `bigscraper help systems`
+Export Formats: `bigscraper help exports` or `bigscraper help platforms`
