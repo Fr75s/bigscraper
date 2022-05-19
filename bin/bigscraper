@@ -1,0 +1,128 @@
+#!/usr/bin/python3
+
+# Bigscraper
+# An unnecessarily large scraper tool to scrape from Launchbox
+
+import os
+import sys
+import json
+import shutil
+
+# Requires lxml and requests
+from lxml import html
+import requests
+
+wd = os.path.dirname(__file__) + "/"
+
+exec(open(wd + "bigscraper-data.py").read())
+
+# Color output
+uc = "\033[0m"
+def color(r, g, b, background=False):
+	return "\033[{};2;{};{};{}m".format(48 if background else 38, r, g, b)
+
+def get_help(c, error=False):
+	if (error):
+		print("Incorrect syntax, showing help.")
+
+	print(color(23, 162, 98) + "\nBigscraper" + uc)
+	print("An unnecessarily large scraper tool to scrape from Launchbox\n")
+
+	if (c == 0 or c == 1):
+		if (len(sys.argv) <= 2 or sys.argv[2] in ("-h", "-?", "--help")):
+			print(color(243, 157, 57) + "Subcommands:" + uc)
+			print("  scrape\tScrape Data for 1 game")
+			print("  bulk\t\tScrape Data for all games in 1 folder")
+			print("  compile\tPut scraped data into a usable format")
+		elif (sys.argv[2].upper() in ("SYSTEMS")):
+			print(color(243, 157, 57) + "Valid Systems:" + uc)
+
+			for s in convert:
+				print("\t" + convert[s] + color(180, 180, 180) + " (" + s + ")" + uc)
+
+			print("\nIf you need any more systems, raise an issue.")
+		elif (sys.argv[2].upper() in ("EXPORTS", "PLATFORMS")):
+			print(color(243, 157, 57) + "Valid Platforms:" + uc)
+			print("\tPegasus")
+			print("\nIf you need any more platforms, raise an issue.")
+
+	if (c == 2):
+		print("scrape")
+		print("Scrape data for 1 game\n")
+
+		print("Syntax: bigscraper.py scrape [system] [file]\n")
+
+		print("Note that you must list the system that runs your game; it won't scrape properly otherwise.")
+
+	if (c == 3):
+		print("bulk")
+		print("Scrape data for all games in 1 folder\n")
+
+		print("Syntax: bigscraper.py bulk [system] [folder]\n")
+
+		print("Note that you must list the system that runs your games; it won't scrape properly otherwise.")
+
+	if (c == 4):
+		print("compile")
+		print("Format scraped data\n")
+
+		print("Syntax: bigscraper.py compile [system] [format]\n")
+
+		print("Supported Formats:")
+		print("  pegasus")
+
+	sys.exit()
+
+#
+# Unified Commands for conversion
+def formulate(s):
+	out = ""
+	inbr = False
+	for c in s:
+		if (c in ("(", "[", "{")):
+			inbr = True
+		if not(inbr):
+			out += c
+		if (c in (")", "]", "}")):
+			inbr = False
+
+	return out.upper().strip(" ").replace(" -","").replace(" ","_").replace(":","").replace(".","").replace("!","").replace("'","")
+
+def toabbr(s):
+	if (s in convert):
+		return convert[s]
+	elif (s in convert_rev):
+		return s
+	else:
+		return "NOABBR"
+
+# S must be a valid abbreviation
+def toid(s):
+	return abbr_id[s]
+
+valid_commands = ["help", "scrape", "bulk", "compile"]
+
+if (len(sys.argv) < 2):
+	get_help(0)
+
+if (len(sys.argv) < 3):
+	if (sys.argv[1] in valid_commands):
+		get_help(valid_commands.index(sys.argv[1]) + 1)
+	else:
+		get_help(0, True)
+else:
+	if (sys.argv[1] in valid_commands and sys.argv[2].lower() in ("-h", "-?", "--help", "help")):
+		get_help(valid_commands.index(sys.argv[1]) + 1)
+	elif (not(sys.argv[1] in valid_commands)):
+		print(sys.argv[1].upper())
+		get_help(0, True)
+	else:
+		if (sys.argv[1].upper() == "HELP"):
+			get_help(1)
+		if (sys.argv[1] == "scrape"):
+			exec(open(wd + "bigscraper-scrape.py").read())
+		if (sys.argv[1] == "compile"):
+			exec(open(wd + "bigscraper-compile.py").read())
+		if (sys.argv[1] == "bulk"):
+			exec(open(wd + "bigscraper-bulk.py").read())
+
